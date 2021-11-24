@@ -1,0 +1,44 @@
+name: branch names
+description: Retrieve github branch or tag information without the /ref/* prefix
+author: nikitins
+inputs:
+  strip_tag_prefix:
+    description: 'The tag prefix to strip i.e. v0.0.1 -> (strip v) -> 0.0.1'
+    default: ''
+    required: false
+
+outputs: 
+  is_default:
+    value: ${{ steps.default.outputs.is_default }}
+  is_tag:
+    value: ${{ steps.tag.outputs.is_tag }}
+  current_branch:
+    value: ${{ steps.current_branch.outputs.current_branch }}
+  base_ref_branch:
+    value: ${{ steps.branch.outputs.base_ref_branch }}
+  head_ref_branch:
+    value: ${{ steps.branch.outputs.head_ref_branch }}
+  ref_branch:
+    value: ${{ steps.branch.outputs.ref_branch }}
+  tag:
+    value: ${{ steps.tag.outputs.tag }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: branch
+      run: .\.github\workflows\branch-actions\powershell-scripts\branch.ps1 -Ref "${{ github.ref }}" -BaseRef "${{ github.base_ref }}" -HeadRef "${{ github.head_ref }}"
+      shell: powershell
+
+    - id: current_branch
+      run: .\.github\workflows\branch-actions\powershell-scripts\current-branch.ps1 -Ref "${{ github.ref }}" -EventName "${{ github.event_name }}" -HeadRefBranch "${{ steps.branch.outputs.head_ref_branch }}" -RefBranch "${{ steps.branch.outputs.ref_branch }}" -StripTagPrefix "${{ inputs.strip_tag_prefix }}"
+      shell: powershell
+
+    - id: default
+      run: .\.github\workflows\branch-actions\powershell-scripts\default.ps1 -Ref "${{ github.ref }}" -CurrentBranch "${{ steps.current_branch.outputs.current_branch }}" -RefBranch "${{ steps.branch.outputs.ref_branch }}"
+      shell: powershell
+
+    - id: tag
+      run: .\.github\workflows\branch-actions\powershell-scripts\tag.ps1 -Ref "${{ github.ref }}" -StripTagPrefix "${{ inputs.strip_tag_prefix }}"
+      shell: powershell
+
