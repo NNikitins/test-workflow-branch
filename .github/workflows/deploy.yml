@@ -18,7 +18,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -32,6 +32,21 @@ jobs:
 
       - name: Get branch name outputs
         run: |
-          echo ${{ github.ref }}
-          echo ${{ github.base_ref }}
-          echo ${{ github.head_ref }}
+          BASE_REF=$(printf "%q" "${{ github.base_ref }}")
+          echo "$(eval printf "%s" "$BASE_REF")"
+          HEAD_REF=$(printf "%q" "${{ github.head_ref }}")
+          echo "$(eval printf "%s" "$HEAD_REF")"
+          REF=$(printf "%q" "${{ github.ref }}")
+          echo "$(eval printf "%s" "$REF")"
+
+          BASE_REF=${BASE_REF/refs\/heads\//}
+          HEAD_REF=${HEAD_REF/refs\/heads\//}
+
+          echo "$(eval printf "%s" "$BASE_REF")"
+          echo "$(eval printf "%s" "$HEAD_REF")"
+
+          REF_BRANCH=${REF/refs\/pulls}
+          echo "$(eval printf "%s" "$REF_BRANCH")"
+          REF_BRANCH=${REF_BRANCH/refs\/heads\//}
+          echo "$(eval printf "%s" "$REF_BRANCH")"
+        shell: bash
