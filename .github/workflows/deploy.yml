@@ -33,8 +33,11 @@ jobs:
       - name: Get branch name outputs
         run: |
           BASE_REF=$(printf "%q" "${{ github.base_ref }}")
+          echo "$(eval printf "%s" "$BASE_REF")"
           HEAD_REF=$(printf "%q" "${{ github.head_ref }}")
+          echo "$(eval printf "%s" "$HEAD_REF")"
           REF=$(printf "%q" "${{ github.ref }}")
+          echo "$(eval printf "%s" "$REF")"
 
           BASE_REF=${BASE_REF/refs\/heads\//}
           HEAD_REF=${HEAD_REF/refs\/heads\//}
