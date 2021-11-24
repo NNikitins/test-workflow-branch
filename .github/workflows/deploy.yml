@@ -5,10 +5,8 @@ name: CI
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [ test-branch, main ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -45,7 +43,7 @@ jobs:
           echo "$(eval printf "%s" "$BASE_REF")"
           echo "$(eval printf "%s" "$HEAD_REF")"
 
-          REF_BRANCH=${REF/refs\/pulls}
+          REF_BRANCH=${REF/refs\/pull}
           echo "$(eval printf "%s" "$REF_BRANCH")"
           REF_BRANCH=${REF_BRANCH/refs\/heads\//}
           echo "$(eval printf "%s" "$REF_BRANCH")"
