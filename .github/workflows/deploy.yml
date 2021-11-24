@@ -45,7 +45,7 @@ jobs:
           echo "$(eval printf "%s" "$BASE_REF")"
           echo "$(eval printf "%s" "$HEAD_REF")"
 
-          REF_BRANCH=${REF/refs\/pulls}
+          REF_BRANCH=${REF/refs\/pull}
           echo "$(eval printf "%s" "$REF_BRANCH")"
           REF_BRANCH=${REF_BRANCH/refs\/heads\//}
           echo "$(eval printf "%s" "$REF_BRANCH")"
